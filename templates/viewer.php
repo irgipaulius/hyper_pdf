@@ -477,10 +477,10 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div class="row">
             <label for="fastReadingSpeed" style="display:block; margin-bottom: 5px; font-weight: bold;">Reading Speed</label>
             <div style="display: flex; align-items: center; gap: 10px;">
-              <input type="range" id="fastReadingSpeedRange" min="0.5" max="10" step="0.5" value="2" style="flex-grow: 1;">
-              <span id="fastReadingSpeedDisplay" style="min-width: 60px; text-align: right;">2.0s</span>
+              <input type="range" id="fastReadingSpeedRange" min="0.1" max="10" step="0.05" value="2" style="flex-grow: 1;">
+              <span id="fastReadingSpeedDisplay" style="min-width: 60px; text-align: right;">2.00s</span>
             </div>
-            <input type="number" id="fastReadingSpeed" class="toolbarField" value="2" min="0.1" max="60" step="0.1" style="width: 100%; margin-top: 8px; display: none;"> 
+            <input type="number" id="fastReadingSpeed" class="toolbarField" value="2" min="0.1" max="10" step="0.05" style="width: 100%; margin-top: 8px; display: none;"> 
             <div id="fastReadingError" style="color: var(--error-color, #d32f2f); font-size: 12px; margin-top: 5px; display: none;"></div>
           </div>
           <div class="buttonRow">

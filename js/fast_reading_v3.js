@@ -33,6 +33,7 @@
             }
             /* Dialog Styling */
             #fastReadingDialog {
+                position: fixed;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
@@ -127,7 +128,7 @@
         function updateDisplay() {
             if (speedDisplay && speedRange) {
                 currentSpeed = parseFloat(speedRange.value);
-                speedDisplay.textContent = currentSpeed.toFixed(1) + 's';
+                speedDisplay.textContent = currentSpeed.toFixed(2) + 's';
             }
         }
 
