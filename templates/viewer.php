@@ -46,6 +46,7 @@ See https://github.com/adobe-type-tools/cmap-resources
     <link rel="resource" type="application/l10n" href="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/pdfjs/web/locale/locale.properties')) ?>?v=<?php p($version) ?>"/>
     <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/pdfjs/build/pdf.js')) ?>?v=<?php p($version) ?>"></script>
     <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/pdfjs/web/viewer.js')) ?>?v=<?php p($version) ?>"></script>
+    <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/fast_reading.js')) ?>?v=<?php p($version) ?>"></script>
     <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/files_pdfviewer-workersrc.js')) ?>?v=<?php p($version) ?>"></script>
   </head>
 
@@ -164,6 +165,10 @@ See https://github.com/adobe-type-tools/cmap-resources
               <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
             </button>
 
+            <button id="secondaryFastReadingMode" class="secondaryToolbarButton visibleLargeView" title="Fast-Reading Mode" tabindex="51">
+              <span>Fast-Reading</span>
+            </button>
+
             <button id="secondaryOpenFile" class="secondaryToolbarButton visibleLargeView" title="Open File" tabindex="52" data-l10n-id="open_file" hidden="true">
               <span data-l10n-id="open_file_label">Open</span>
             </button>
@@ -274,6 +279,10 @@ See https://github.com/adobe-type-tools/cmap-resources
               <div id="toolbarViewerRight">
                 <button id="presentationMode" class="toolbarButton hiddenLargeView" title="Switch to Presentation Mode" tabindex="31" data-l10n-id="presentation_mode">
                   <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
+                </button>
+
+                <button id="fastReadingMode" class="toolbarButton hiddenLargeView" title="Fast-Reading Mode" tabindex="31">
+                  <span>Fast-Reading</span>
                 </button>
 
                 <button id="openFile" class="toolbarButton hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file" hidden="true">
