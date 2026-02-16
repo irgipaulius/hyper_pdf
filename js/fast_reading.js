@@ -40,37 +40,46 @@
                 background-color: var(--doorhanger-bg-color);
                 color: var(--main-color);
                 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-                padding: 16px;
-                min-width: 300px;
+                padding: 20px;
+                min-width: 350px;
                 z-index: 10000;
             }
             #fastReadingDialog::backdrop {
                 background-color: rgba(0, 0, 0, 0.5);
             }
             #fastReadingDialog .row {
-                margin-bottom: 10px;
+                margin-bottom: 15px;
                 display: flex;
                 flex-direction: column;
             }
             #fastReadingDialog .buttonRow {
                 text-align: right;
-                margin-top: 15px;
+                margin-top: 20px;
                 display: flex;
                 justify-content: flex-end;
-                gap: 8px;
+                gap: 10px;
             }
             #fastReadingDialog label {
-                margin-bottom: 4px;
+                margin-bottom: 8px;
+                font-size: 14px;
             }
-            #fastReadingDialog input {
-                padding: 4px;
+            #fastReadingDialog input[type="range"] {
+                width: 100%;
+                cursor: pointer;
+            }
+            #fastReadingSpeedDisplay {
+                font-family: monospace;
+                font-size: 14px;
+                font-weight: bold;
             }
         `;
         document.head.appendChild(style);
 
         // --- DOM Elements ---
         const dialog = document.getElementById('fastReadingDialog');
-        const speedInput = document.getElementById('fastReadingSpeed');
+        const speedRange = document.getElementById('fastReadingSpeedRange');
+        const speedDisplay = document.getElementById('fastReadingSpeedDisplay');
+        const errorDiv = document.getElementById('fastReadingError');
         const btnSubmit = document.getElementById('fastReadingSubmit');
         const btnCancel = document.getElementById('fastReadingCancel');
 
@@ -97,10 +106,6 @@
             const intervalMs = currentSpeed * 1000;
             
             fastReadingInterval = setInterval(function() {
-                // Double check we are still in presentation mode
-                // PDFViewerApplication.pdfViewer.isInPresentationMode might be null/undefined in some versions?
-                // But PDFViewerApplication.presentationModeState === 3 is definite.
-                // Let's rely on the property if available, otherwise check state.
                 const isFullscreen = (PDFViewerApplication.pdfViewer.presentationModeState === 3) || 
                                      (PDFViewerApplication.pdfViewer.isInPresentationMode);
 
@@ -118,17 +123,36 @@
 
         // --- Dialog Handling ---
 
+        function updateDisplay() {
+            if (speedDisplay && speedRange) {
+                currentSpeed = parseFloat(speedRange.value);
+                speedDisplay.textContent = currentSpeed.toFixed(1) + 's';
+            }
+        }
+
         function openDialog() {
             if (!dialog) return;
-            speedInput.value = currentSpeed;
+            
+            // Sync UI
+            if (speedRange) {
+                speedRange.value = currentSpeed;
+                updateDisplay();
+            }
+
+            // Clear errors
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+                errorDiv.textContent = '';
+            }
+
             if (typeof dialog.showModal === 'function') {
                 dialog.showModal();
             } else {
                 dialog.setAttribute('open', 'true');
                 dialog.style.display = 'block';
             }
-            speedInput.focus();
-            speedInput.select();
+            
+            if (speedRange) speedRange.focus();
         }
 
         function closeDialog() {
@@ -142,17 +166,32 @@
         }
 
         function onStartClick() {
-            const val = parseFloat(speedInput.value);
+            let val;
+            if (speedRange) {
+                val = parseFloat(speedRange.value);
+            } else {
+                // Fallback
+                const speedInput = document.getElementById('fastReadingSpeed');
+                val = parseFloat(speedInput ? speedInput.value : 0);
+            }
+
             if (isNaN(val) || val < 0.1 || val > 60) {
-                alert('Please enter a valid number between 0.1 and 60.');
+                 if (errorDiv) {
+                    errorDiv.textContent = 'Please select a valid speed between 0.1 and 60 seconds.';
+                    errorDiv.style.display = 'block';
+                } else {
+                    alert('Please select a valid speed.');
+                }
                 return;
             }
+            
             currentSpeed = val;
             closeDialog();
 
-            // CRITICAL: Request presentation mode synchronously within this user click event
-            // to satisfy browser security requirements ("user gesture").
-            // Check if we are already in presentation mode
+            // FORCE START FROM PAGE 1
+            PDFViewerApplication.page = 1;
+
+            // CRITICAL: Request presentation mode synchronously
             const isFullscreen = (PDFViewerApplication.pdfViewer.presentationModeState === 3) || 
                                  (PDFViewerApplication.pdfViewer.isInPresentationMode);
 
@@ -160,7 +199,6 @@
                 pendingStart = true;
                 PDFViewerApplication.requestPresentationMode();
             } else {
-                // Already in presentation mode? Just restart interval with new speed
                 startInterval();
             }
         }
@@ -172,8 +210,10 @@
             btnCancel.addEventListener('click', closeDialog);
         }
         
-        if (speedInput) {
-            speedInput.addEventListener('keydown', function(e) {
+        if (speedRange) {
+            speedRange.addEventListener('input', updateDisplay);
+            // Allow Enter key to submit
+            speedRange.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     onStartClick();
                 }
@@ -186,7 +226,6 @@
             const btn = document.getElementById(id);
             if (btn) {
                 btn.addEventListener('click', function(e) {
-                    // Prevent default behavior if any
                     e.preventDefault();
                     openDialog();
                 });
@@ -200,7 +239,6 @@
                 // PresentationModeState: NORMAL: 1, FULLSCREEN: 3
                 if (state === 3) { // FULLSCREEN
                     if (pendingStart) {
-                        // Give it a slight delay to ensure the DOM is ready for page turning
                         setTimeout(startInterval, 500);
                         pendingStart = false;
                     }

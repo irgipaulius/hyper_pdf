@@ -475,12 +475,17 @@ See https://github.com/adobe-type-tools/cmap-resources
         
         <dialog id="fastReadingDialog">
           <div class="row">
-            <label for="fastReadingSpeed" style="display:block; margin-bottom: 5px;">Seconds per page (0.1 - 60):</label>
-            <input type="number" id="fastReadingSpeed" class="toolbarField" value="2" min="0.1" max="60" step="0.1" style="width: 100%;">
+            <label for="fastReadingSpeed" style="display:block; margin-bottom: 5px; font-weight: bold;">Reading Speed</label>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="range" id="fastReadingSpeedRange" min="0.5" max="10" step="0.5" value="2" style="flex-grow: 1;">
+              <span id="fastReadingSpeedDisplay" style="min-width: 60px; text-align: right;">2.0s</span>
+            </div>
+            <input type="number" id="fastReadingSpeed" class="toolbarField" value="2" min="0.1" max="60" step="0.1" style="width: 100%; margin-top: 8px; display: none;"> 
+            <div id="fastReadingError" style="color: var(--error-color, #d32f2f); font-size: 12px; margin-top: 5px; display: none;"></div>
           </div>
           <div class="buttonRow">
             <button id="fastReadingCancel" class="dialogButton"><span>Cancel</span></button>
-            <button id="fastReadingSubmit" class="dialogButton"><span>Start</span></button>
+            <button id="fastReadingSubmit" class="dialogButton" style="background-color: var(--button-primary-bg-color, #0082c9); color: var(--button-primary-color, white);"><span>Start Reading</span></button>
           </div>
         </dialog>
       </div>  <!-- dialogContainer -->
