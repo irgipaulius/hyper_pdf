@@ -472,6 +472,17 @@ See https://github.com/adobe-type-tools/cmap-resources
             <button id="printCancel" class="dialogButton"><span data-l10n-id="print_progress_close">Cancel</span></button>
           </div>
         </dialog>
+        
+        <dialog id="fastReadingDialog">
+          <div class="row">
+            <label for="fastReadingSpeed" style="display:block; margin-bottom: 5px;">Seconds per page (0.1 - 60):</label>
+            <input type="number" id="fastReadingSpeed" class="toolbarField" value="2" min="0.1" max="60" step="0.1" style="width: 100%;">
+          </div>
+          <div class="buttonRow">
+            <button id="fastReadingCancel" class="dialogButton"><span>Cancel</span></button>
+            <button id="fastReadingSubmit" class="dialogButton"><span>Start</span></button>
+          </div>
+        </dialog>
       </div>  <!-- dialogContainer -->
 
     </div> <!-- outerContainer -->
