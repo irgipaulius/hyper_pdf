@@ -2,6 +2,7 @@
     'use strict';
 
     function initFastReading() {
+        console.log('Fast Reading v3 initialized');
         if (typeof PDFViewerApplication === 'undefined' || !PDFViewerApplication.initialized) {
             setTimeout(initFastReading, 100);
             return;
